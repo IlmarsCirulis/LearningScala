@@ -1,9 +1,42 @@
 class Matrix(var content: Seq[Seq[Fraction]]) {
-  require(content.forall(row => row.length == content.head.length), "Jagged array isn't accepted")
+  require(content.nonEmpty, "Empty list isn't accepted")
+  require(content.forall(row => row.length == content.head.length), "Jagged list isn't accepted")
+  require(content.head.nonEmpty, "Rows must be nonempty")
   val (numberOfRows, numberOfColumns) = (content.length, content.head.length)
-  
+
+  def this(fun: Int => Int => Fraction, numberOfRows: Int, numberOfColumns: Int) =
+    this(Seq.range(0, numberOfRows).map(row => Seq.range(0, numberOfColumns).map(col => fun(row)(col))))
+
+  def this(size: Int) = this(row => col => if (row == col) Fraction(1, 1) else Fraction(0, 1), size, size)
+
   def isSquareMatrix: Boolean = numberOfRows == numberOfColumns
-  
+
+  def transpose: Matrix = Matrix(row => col => content(col)(row), numberOfColumns, numberOfRows)
+
+  def opposite(): Matrix = {
+    Matrix(content.map(row => row.map(x => x.opposite)))
+  }
+
+  private def sameDimensions(other: Matrix): Boolean = numberOfRows == other.numberOfRows && numberOfColumns == other.numberOfColumns
+
+  def add(other: Matrix): Matrix = {
+    require(sameDimensions(other), "To add or subtract matrices, they have to have same dimensions")
+    Matrix(row => col => content(row)(col).add(other.content(row)(col)), numberOfRows, numberOfColumns)
+  }
+
+  def subtract(other: Matrix): Matrix = this.add(other.opposite())
+
+  private def getColumn(column: Int): Seq[Fraction] = content.map(row => row(column))
+
+  private def scalarProduct(first: Seq[Fraction], second: Seq[Fraction]): Fraction =
+    first.lazyZip(second).map(_.multiply(_)).reduce(_.add(_))
+
+  def multiply(other: Matrix): Matrix = {
+    require(numberOfColumns == other.numberOfRows,
+      "To multiply matrices, number of rows in the first matrix must be equal to number of columns in the second matrix")
+    Matrix(row => col => scalarProduct(content(row), other.getColumn(col)), numberOfRows, other.numberOfColumns)
+  }
+
   private def swapRows(firstRow: Int, secondRow: Int): Unit = {
     val t = content(firstRow)
     content = content.updated(firstRow, content(secondRow))
@@ -87,5 +120,18 @@ class Matrix(var content: Seq[Seq[Fraction]]) {
     }
   }
 
+  override def equals(other: Any): Boolean = other match
+    case that: Matrix =>
+      numberOfRows == that.numberOfRows &&
+        numberOfColumns == that.numberOfColumns &&
+        content == that.content
+    case _ => false
+
+  override def hashCode(): Int =
+    val state = Seq(content)
+    state.map(_.hashCode()).foldLeft(0)((a, b) => 31 * a + b)
+
   override def toString: String = content.toString
+
 }
+

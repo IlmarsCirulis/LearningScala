@@ -13,7 +13,7 @@ class Matrix(var content: Seq[Seq[Fraction]]) {
 
   def transpose: Matrix = Matrix(row => col => content(col)(row), numberOfColumns, numberOfRows)
 
-  def opposite(): Matrix = {
+  def opposite: Matrix = {
     Matrix(content.map(row => row.map(x => x.opposite)))
   }
 
@@ -24,7 +24,7 @@ class Matrix(var content: Seq[Seq[Fraction]]) {
     Matrix(row => col => content(row)(col).add(other.content(row)(col)), numberOfRows, numberOfColumns)
   }
 
-  def subtract(other: Matrix): Matrix = this.add(other.opposite())
+  def subtract(other: Matrix): Matrix = this.add(other.opposite)
 
   private def getColumn(column: Int): Seq[Fraction] = content.map(row => row(column))
 
@@ -33,7 +33,7 @@ class Matrix(var content: Seq[Seq[Fraction]]) {
 
   def multiply(other: Matrix): Matrix = {
     require(numberOfColumns == other.numberOfRows,
-      "To multiply matrices, number of rows in the first matrix must be equal to number of columns in the second matrix")
+      "To multiply matrices, number of columns in the first matrix must be equal to number of rows in the second matrix")
     Matrix(row => col => scalarProduct(content(row), other.getColumn(col)), numberOfRows, other.numberOfColumns)
   }
 
@@ -107,8 +107,7 @@ class Matrix(var content: Seq[Seq[Fraction]]) {
 
   def gaussianEliminationBothParts(): Seq[ElementaryRowOperation] =
     gaussianEliminationPartOne() ++ gaussianEliminationPartTwo()
-
-
+  
   def applyGivenOperations(operations: Seq[ElementaryRowOperation]): Unit = {
     for (op <- operations) {
       op match {

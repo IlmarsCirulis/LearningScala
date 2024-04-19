@@ -150,9 +150,9 @@ class MatrixSuite extends AnyFunSuite {
     val expectedResult = Matrix((Fraction(-2, 1) :: Nil) :: Nil)
   }
 
-  /* */
+  /* Gaussian elimination, first part */
 
-  test("gaussian elimination first part of invertible matrix, checking only resulting matrix") {
+  test("Gaussian elimination first part of invertible matrix, checking only resulting matrix") {
     val firstRow = Fraction(4, 5) :: Fraction(-4, 3) :: Fraction(8, 9) :: Nil
     val secondRow = Fraction(1, 5) :: Fraction(-9, 10) :: Fraction(-3, 2) :: Nil
     val thirdRow = Fraction(-3, 1) :: Fraction(-1, 1) :: Fraction(-1, 6) :: Nil
@@ -165,7 +165,7 @@ class MatrixSuite extends AnyFunSuite {
     assert(matrix == result)
   }
 
-  test("gaussian elimination first part of non-invertible matrix, checking only resulting matrix") {
+  test("Gaussian elimination first part of non-invertible matrix, checking only resulting matrix") {
     val firstRow = Fraction(-1, 2) :: Fraction(-8, 7) :: Fraction(-5, 1) :: Nil
     val secondRow = Fraction(1, 1) :: Fraction(-8, 3) :: Fraction(0, 1) :: Nil
     val thirdRow = Fraction(1, 1) :: Fraction(0, 1) :: Fraction(70, 13) :: Nil
@@ -178,7 +178,28 @@ class MatrixSuite extends AnyFunSuite {
     assert(matrix == result)
   }
 
+  /* Gaussian elimination, both parts */
 
+  test("Gaussian elimination, both parts, on invertible matrix, checking only resulting matrix") {
+    val firstRow = Fraction(5, 1) :: Fraction(-1, 2) :: Fraction(7, 3) :: Nil
+    val secondRow = Fraction(-10, 1) :: Fraction(-8, 5) :: Fraction(-6, 5) :: Nil
+    val thirdRow = Fraction(2, 7) :: Fraction(1, 3) :: Fraction(6, 7) :: Nil
+    val matrix = Matrix(firstRow :: secondRow :: thirdRow :: Nil)
+    matrix.gaussianEliminationBothParts()
+    assert(matrix == Matrix(3))
+  }
 
+  test("Gaussian elimination, both parts, on non-invertible matrix, checking only resulting matrix") {
+    val firstRow = Fraction(-1, 1) :: Fraction(-5, 3) :: Fraction(2, 1) :: Nil
+    val secondRow = Fraction(7, 2) :: Fraction(-1, 1) :: Fraction(-1, 2) :: Nil
+    val thirdRow = Fraction(-1, 2) :: Fraction(-9, 10) :: Fraction(218, 205) :: Nil
+    val matrix = Matrix(firstRow :: secondRow :: thirdRow :: Nil)
+    val firstRowOfResult = Fraction(1, 1) :: Fraction(0, 1) :: Fraction(-17, 41) :: Nil
+    val secondRowOfResult = Fraction(0, 1) :: Fraction(1, 1) :: Fraction(-39, 41) :: Nil
+    val thirdRowOfResult = Fraction(0, 1) :: Fraction(0, 1) :: Fraction(0, 1) :: Nil
+    val result = Matrix(firstRowOfResult :: secondRowOfResult :: thirdRowOfResult :: Nil)
+    matrix.gaussianEliminationBothParts()
+    assert(matrix == result)
+  }
 
 }

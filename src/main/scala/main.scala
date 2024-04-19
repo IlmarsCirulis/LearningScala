@@ -1,16 +1,8 @@
 @main def main(): Unit =
-  val firstRow = Fraction(2, 1) :: Fraction(-1, 1) :: Fraction(0, 1) :: Nil
-  val secondRow = Fraction(-1, 1) :: Fraction(2, 1) :: Fraction(-1, 1) :: Nil
-  val thirdRow = Fraction(0, 1) :: Fraction(-1, 1) :: Fraction(2, 1) :: Nil
-  val matrixA = Matrix(firstRow :: secondRow :: thirdRow :: Nil)
-  println(matrixA)
-
-  val operations = matrixA.gaussianEliminationBothParts()
-  println(matrixA)
-  println(operations)
-
-  val matrixB = Matrix(3)
-  matrixB.applyGivenOperations(operations)
-  println(matrixB)
-  
-  println(Matrix(firstRow :: secondRow :: thirdRow :: Nil).multiply(matrixB))
+  val firstRow = Fraction(-1, 1) :: Fraction(-5, 3) :: Fraction(2, 1) :: Nil
+  val secondRow = Fraction(7, 2) :: Fraction(-1, 1) :: Fraction(-1, 2) :: Nil
+  val thirdRow = Fraction(-1, 2) :: Fraction(-9, 10) :: Fraction(217, 205) :: Nil
+  val matrix = Matrix(firstRow :: secondRow :: thirdRow :: Nil)
+  println(matrix)
+  matrix.gaussianEliminationBothParts()
+  println(matrix)

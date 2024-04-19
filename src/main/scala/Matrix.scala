@@ -1,3 +1,5 @@
+import ElementaryRowOperation.additionOfMultipliedRow
+
 class Matrix(var content: Seq[Seq[Fraction]]) {
   require(content.nonEmpty, "Empty list isn't accepted")
   require(content.forall(row => row.length == content.head.length), "Jagged list isn't accepted")
@@ -90,7 +92,9 @@ class Matrix(var content: Seq[Seq[Fraction]]) {
     var usedOperations = Seq[ElementaryRowOperation]()
     var (currentRow, currentColumn) = (numberOfRows - 1, numberOfColumns - 1)
     while (currentRow >= 0 && currentColumn >= 0) {
-      if (content(currentRow)(currentColumn) != Fraction(0, 1)) {
+      val nonzero = content(currentRow).indexWhere(x => x != Fraction(0, 1))
+      if (nonzero != -1) {
+        currentColumn = nonzero
         for (row <- 0 until currentRow) {
           if (content(row)(currentColumn) != Fraction(0, 1)) {
             val multiplier = content(row)(currentColumn).opposite
@@ -98,16 +102,15 @@ class Matrix(var content: Seq[Seq[Fraction]]) {
             usedOperations = usedOperations.appended(ElementaryRowOperation.additionOfMultipliedRow(row, currentRow, multiplier))
           }
         }
-        currentRow -= 1
       }
-      currentColumn -= 1
+      currentRow -= 1
     }
     usedOperations
   }
 
   def gaussianEliminationBothParts(): Seq[ElementaryRowOperation] =
     gaussianEliminationPartOne() ++ gaussianEliminationPartTwo()
-  
+
   def applyGivenOperations(operations: Seq[ElementaryRowOperation]): Unit = {
     for (op <- operations) {
       op match {
@@ -118,6 +121,7 @@ class Matrix(var content: Seq[Seq[Fraction]]) {
       }
     }
   }
+
 
   override def equals(other: Any): Boolean = other match
     case that: Matrix =>

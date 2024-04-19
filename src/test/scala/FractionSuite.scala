@@ -359,4 +359,17 @@ class FractionSuite extends AnyFunSuite {
     assert(Fraction(BigInt("1234567890123456789"), BigInt("9876543210987654321")).toString.equals("13717421 / 109739369"))
   }
 
+  /* Some more tests */
+
+  test("Fraction 2/3 to 100th power") {
+    val two = Fraction(2)
+    val three = Fraction(3)
+    val two_thirds = two.divide(three)
+    var result = Fraction(1)
+    for (i <- 1 until 101) {
+      result = result.multiply(two_thirds)
+    }
+    assert(result == Fraction(BigInt("1267650600228229401496703205376"), BigInt("515377520732011331036461129765621272702107522001")))
+  }
+
 }

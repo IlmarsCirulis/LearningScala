@@ -88,6 +88,7 @@ class Matrix(var content: Seq[Seq[Fraction]]) {
     usedOperations
   }
 
+  /* TODO: check this method more carefully */
   def gaussianEliminationPartTwo(): Seq[ElementaryRowOperation] = {
     var usedOperations = Seq[ElementaryRowOperation]()
     var (currentRow, currentColumn) = (numberOfRows - 1, numberOfColumns - 1)

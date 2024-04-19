@@ -61,7 +61,7 @@ class Fraction(val num: BigInt, den: BigInt = BigInt(1)) extends Ordered[Fractio
 
   def multiply(value: Fraction): Fraction =
     if (value.signum == 0 || isZero)
-      Fraction(BigInt(0), BigInt(1))
+      Fraction(0)
     else
       Fraction(value.numerator * numerator, value.denominator * denominator)
 
@@ -69,7 +69,7 @@ class Fraction(val num: BigInt, den: BigInt = BigInt(1)) extends Ordered[Fractio
     if (value.isZero)
       throw new ArithmeticException("The value to divide by must not be zero")
     else if (isZero)
-      Fraction(BigInt(0), BigInt(1))
+      Fraction(0)
     else
       Fraction(numerator * value.denominator, denominator * value.numerator)
 

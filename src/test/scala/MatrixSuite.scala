@@ -1,5 +1,7 @@
 import org.scalatest.funsuite.AnyFunSuite
 
+import scala.collection.immutable
+
 class MatrixSuite extends AnyFunSuite {
 
   /* Testing main constructor for Matrix */
@@ -52,7 +54,7 @@ class MatrixSuite extends AnyFunSuite {
     assert(testMatrix.isSquareMatrix)
   }
 
-  test("Given nonsquare matrix, isSquareMatrix returns false") {
+  test("Given non-square matrix, isSquareMatrix returns false") {
     val firstRow = Fraction(1, 7) :: Fraction(5, 3) :: Fraction(1, 4) :: Fraction(5, 2) :: Nil
     val secondRow = Fraction(1, 2) :: Fraction(3, 2) :: Fraction(1, 3) :: Fraction(3, 4) :: Nil
     val thirdRow = Fraction(3) :: Fraction(4) :: Fraction(3, 10) :: Fraction(2, 3) :: Nil
@@ -215,6 +217,40 @@ class MatrixSuite extends AnyFunSuite {
     val result = Matrix(firstRowOfResult :: secondRowOfResult :: thirdRowOfResult :: thirdRowOfResult :: Nil)
     assert(matrix == result)
   }
+
+  /* Determinant */
+
+  test("Calculating determinant of non-square matrix causes error") {
+    val matrix = Matrix((Fraction(1, 2) :: Fraction(3, 4) :: Nil) :: Nil)
+    val exception = intercept[IllegalArgumentException](matrix.calculateDeterminant())
+    assert(exception.getMessage.equals("requirement failed: Must be square matrix to calculate determinant"))
+  }
+
+  test("Calculating determinant of invertible 3x3 matrix") {
+    val firstRow = Fraction(-2) :: Fraction(0) :: Fraction(-8, 7) :: Nil
+    val secondRow = Fraction(3, 10) :: Fraction(1, 2) :: Fraction(5, 2) :: Nil
+    val thirdRow = Fraction(7, 9) :: Fraction(-1) :: Fraction(-1, 3) :: Nil
+    val matrix = Matrix(firstRow :: secondRow :: thirdRow :: Nil)
+    assert(matrix.calculateDeterminant() == Fraction(-1222, 315))
+  }
+
+  test("Calculating determinant of non-invertible 3x3 matrix with integers") {
+    val firstRow = Fraction(1) :: Fraction(2) :: Fraction(3) :: Nil
+    val secondRow = Fraction(2) :: Fraction(3) :: Fraction(4) :: Nil
+    val thirdRow = Fraction(3) :: Fraction(5) :: Fraction(7) :: Nil
+    val matrix = Matrix(firstRow :: secondRow :: thirdRow :: Nil)
+    assert(matrix.calculateDeterminant() == Fraction(0))
+  }
+
+  test("Calculating determinant of non-invertible 3x3 matrix") {
+    val firstRow = Fraction(-2) :: Fraction(0) :: Fraction(-8, 7) :: Nil
+    val secondRow = Fraction(3, 10) :: Fraction(1, 2) :: Fraction(5, 2) :: Nil
+    val thirdRow = Fraction(7, 9) :: Fraction(-1) :: Fraction(-1327, 315) :: Nil
+    val matrix = Matrix(firstRow :: secondRow :: thirdRow :: Nil)
+    assert(matrix.calculateDeterminant() == Fraction(0))
+  }
+
+
 
 
 

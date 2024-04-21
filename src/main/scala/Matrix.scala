@@ -1,4 +1,4 @@
-import ElementaryRowOperation.additionOfMultipliedRow
+import ElementaryRowOperation.*
 
 class Matrix(var content: Seq[Seq[Fraction]]) {
   require(content.nonEmpty, "Empty list isn't accepted")
@@ -123,6 +123,20 @@ class Matrix(var content: Seq[Seq[Fraction]]) {
     }
   }
 
+  def calculateDeterminant(): Fraction = {
+    require(isSquareMatrix, "Must be square matrix to calculate determinant")
+    val operations = gaussianEliminationPartOne()
+    val diagonal = List.range(0, numberOfRows).map(i => content(i)(i))
+    if (diagonal.forall(x => x == Fraction(1))) {
+      val fun: ElementaryRowOperation => Fraction = {
+        case ElementaryRowOperation.multiplication(_, multiplier) => multiplier
+        case _ => Fraction(1)
+      }
+      operations.map(fun).reduce(_.multiply(_)).reciprocal
+    } else {
+      Fraction(0)
+    }
+  }
 
   override def equals(other: Any): Boolean = other match
     case that: Matrix =>
